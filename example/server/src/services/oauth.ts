@@ -29,20 +29,20 @@ export interface IdTokenPayload {
   exp: number;
 }
 
-const googleClientSecret = process.env["GOOGLE_CLIENT_SECRET"] as string;
-
 const exchangeCode = async (
+  baseUrl: string,
   code: string,
   grantType: string,
   clientId: string,
-  redirectUri: string
+  redirectUri: string,
+  clientSecret: string
 ): Promise<IdTokenPayload | Error> => {
-  const url = new URL("https://oauth2.googleapis.com/token");
+  const url = new URL(baseUrl);
   url.searchParams.set("grant_type", grantType);
   url.searchParams.set("code", code);
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("redirect_uri", redirectUri);
-  url.searchParams.set("client_secret", googleClientSecret);
+  url.searchParams.set("client_secret", clientSecret);
 
   try {
     const res = await fetch(url, { method: "POST" });
